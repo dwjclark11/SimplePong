@@ -13,6 +13,7 @@
 #include <functional>
 #include <algorithm>
 #include <sstream>
+#include <stack>
 
 //using namespace sf;
 //#include <functional>
