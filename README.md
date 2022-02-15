@@ -2,7 +2,10 @@
 ## Introduction
 This is a fun little of Pong written in C++ using SFML. I made this game with my kids for a little bit of fun together.
 Right now there is only one state [GameState]; however, I will be added more states to change the difficulty, multiball mode ect.
-The balls multiply based on the speed level.
+
+*    The balls multiply based on the speed level.
+*    There is some very simple AI that could be improved.
+*    Currently not resizable (Resolution: [1920 x 1080]). Make sure your resolution settings are set to that.
 
 ## Controls
 | Key | Action |
