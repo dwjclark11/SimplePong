@@ -168,7 +168,7 @@ void Game::initBall()
 {
 	Ball ball(50.f, &mSunTexture);
 	ball.SetStartPosition(*mWindow);
-	ball.UpdateRotation();
+	
 	mBalls.push_back(ball);
 }
 
@@ -294,7 +294,7 @@ void Game::updateBallMovement()
 	// ====================================================================================================
 	for (auto& ball : mBalls)
 	{
-		ball.UpdateRotation();
+		
 		// Start Game / After Goals / New Ball enters
 		if ((sf::Keyboard::isKeyPressed(sf::Keyboard::Enter) || ball.GetSpeed() == 0.f) && !ball.GetBallLeft() && !ball.GetBallRight())
 		{
@@ -417,6 +417,12 @@ void Game::updateBallMovement()
 			}
 		}
 	}
+}
+
+void Game::updateBallRotation(const float& dt)
+{
+	for (auto& ball : mBalls)
+		ball.UpdateRotation(dt);
 }
 
 void Game::updateBallCollisions()
@@ -691,6 +697,7 @@ void Game::update()
 	mPlayerB->Update(mDt);
 
 	updateBallMovement();
+	updateBallRotation(mDt);
 	updateAI();
 	updateBallCollisions();
 	updateBallSpeed();

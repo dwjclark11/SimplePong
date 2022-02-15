@@ -121,6 +121,7 @@ public:
 	void updateAI();
 	void updateDeltaTime();
 	void updateBallMovement();
+	void updateBallRotation(const float& dt);
 	void updateBallCollisions();
 	void updateBallSpeed();
 	void updatePlayerScores();

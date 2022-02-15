@@ -42,6 +42,6 @@ public:
 	void IncreaseLevel() { mLevel++; }
 	void ResetLevel() { mLevel = 1; }
 	const int GetLevel() const { return mLevel; }
-	void UpdateRotation() { mBall.rotate(mRotation); }
+	void UpdateRotation(float dt) { mBall.rotate(mRotation * dt); }
 	void SetRotationDir(bool clockwise);
 };

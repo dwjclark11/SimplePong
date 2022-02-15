@@ -6,7 +6,7 @@ Ball::Ball(float radius, const sf::Texture* texture)
 	, mDown(false)
 	, mSpeed(0.f)
 	, mRadius(50.f)
-	, mRotation(10.f)
+	, mRotation(1000.f)
 	, mLevel(1)
 	, mLeft(false)
 	, mRight(false)
@@ -37,7 +37,7 @@ void Ball::SetBallMovement(float dir, float moveSpeed, float ballVert, const flo
 void Ball::SetRotationDir(bool clockwise)
 {
 	if (clockwise)
-		mRotation = 10.f;
+		mRotation = 1000.f;
 	else
-		mRotation = -10.f;
+		mRotation = -1000.f;
 }
