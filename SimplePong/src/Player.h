@@ -3,33 +3,33 @@
 class Player
 {
 private:
-	sf::RectangleShape player;
+	sf::RectangleShape mPlayer;
 
-	float movementSpeed;
-	bool driftUp;
-	bool driftDown;
+	bool mDriftUp;
+	bool mDriftDown;
 
-	bool bUp;
-	bool bDown;
+	bool mUp;
+	bool mDown;
 
-	bool secondPlayer;
-	bool bPlayerAIOn;
+	bool mSecondPlayer;
+	bool mPlayerAIOn;
 
-	float maxPlayerDown;
-	bool bLeft;
-	bool bRight;
-	unsigned speedDifficulty;
-	float ballUp;
-	float ballDown;
+	float mMaxPlayerDown;
+	bool mLeft;
+	bool mRight;
+	unsigned mSpeedDifficulty;
+	float mBallUp;
+	float mBallDown;
 
-	float playerSpeed;
+	float mPlayerSpeed;
+
 public:
 	Player(float xPos, float yPos, float max_down_pos, sf::Color color, const sf::Texture* texture, bool second_player);
 	~Player();
 
 	void PlayerAIDrift(const float& dt);
 	void PlayerAIOn(bool AIOn);
-	bool IsPlayerAI() { return bPlayerAIOn; }
+	bool IsPlayerAI() { return mPlayerAIOn; }
 	float GetPlayerYPosition();
 	void PlayerMoveUP(const float& dt);
 	void PlayerMoveDown(const float& dt);

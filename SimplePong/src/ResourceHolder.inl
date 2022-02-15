@@ -8,7 +8,7 @@ implementation. .inl is a common file extension for inline template implementati
 template <typename Resource, typename Identifier>
 void ResourceHolder<Resource, Identifier>::load(Identifier ID, const std::string& filename)
 {
-	std::unique_ptr<Resource> resource(new Resource());
+	std::unique_ptr<Resource> resource = std::make_unique<Resource>();
 
 	if (!resource->loadFromFile(filename))
 		throw std::runtime_error("ResourceHolder::load - failed to load " + filename);
@@ -21,7 +21,7 @@ template <typename Resource, typename Identifier>
 template <typename Parameter>
 void ResourceHolder<Resource, Identifier>::load(Identifier ID, const std::string& filename, const Parameter& secondParam)
 {
-	std::unique_ptr<Resource> resource(new Resource());
+	std::unique_ptr<Resource> resource = std::make_unique<Resource>();
 
 	if (!resource->loadFromFile(filename, secondParam))
 	{

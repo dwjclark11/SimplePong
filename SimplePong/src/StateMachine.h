@@ -15,8 +15,9 @@ public:
 	void RemoveState();
 
 	void ChangeState();
-	void Update(float dt);
+	void Update(const float& dt);
 	void HandleInputs();
+	void Render(const float& dt );
 	
 	StateRef& GetCurrentState();
 

@@ -22,7 +22,7 @@ SoundPlayer::SoundPlayer()
 	mSoundBuffers.load(SoundEffect::Bounce1, "Sounds/paddle_1_hit.wav");
 	mSoundBuffers.load(SoundEffect::Goal, "Sounds/Goal.wav");
 	mSoundBuffers.load(SoundEffect::Start, "Sounds/Ball_Start.wav");
-	//mSoundBuffers.load(SoundEffect::Bounce, "Sounds/Upgrade.wav");
+	mSoundBuffers.load(SoundEffect::Upgrade, "Sounds/Upgrade.wav");
 	//mSoundBuffers.load(SoundEffect::ButtonDown, "Sounds/cursorDown.ogg");
 	//mSoundBuffers.load(SoundEffect::ButtonUp, "Sounds/cursorUp.ogg");
 	//mSoundBuffers.load(SoundEffect::TitleStart, "Sounds/TitleStart.ogg");

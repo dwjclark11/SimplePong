@@ -21,7 +21,7 @@ public:
 	void SetPosition(float x, float y) { mBall.setPosition(sf::Vector2f(x, y)); }
 	const sf::Vector2f GetPosition() const { return mBall.getPosition(); }
 	const sf::FloatRect GetGlobalBounds() const { return mBall.getGlobalBounds(); }
-	void SetBallMovement(float dir, float moveSpeed, float ballVert, const float dt);
+	void SetBallMovement(float dir, float ballVert, const float dt);
 	void SetBallFillColor(sf::Color color) { mBall.setFillColor(color); }
 	void SetBallOutlineColor(sf::Color color) { mBall.setOutlineColor(color); }
 	void SetBallOutlineThickness(float thickness) { mBall.setOutlineThickness(thickness); }

@@ -57,7 +57,7 @@ void StateMachine::ChangeState()
 	}
 }
 
-void StateMachine::Update(float dt)
+void StateMachine::Update(const float& dt)
 {
 	if (!mStates.empty())
 	{
@@ -70,6 +70,14 @@ void StateMachine::HandleInputs()
 	if (!mStates.empty())
 	{
 		mStates.top()->HandleInput();
+	}
+}
+
+void StateMachine::Render(const float& dt)
+{
+	if (!mStates.empty())
+	{
+		mStates.top()->Render(dt);
 	}
 }
 

@@ -4,7 +4,7 @@
 Ball::Ball(float radius, const sf::Texture* texture)
 	: mUp(false)
 	, mDown(false)
-	, mSpeed(0.f)
+	, mSpeed(650.f)
 	, mRadius(50.f)
 	, mRotation(1000.f)
 	, mLevel(1)
@@ -29,9 +29,9 @@ void Ball::SetStartPosition(sf::Window& window)
 	mBall.setPosition(sf::Vector2f((window.getSize().x / 2) - mBall.getGlobalBounds().width, (window.getSize().y / 2) - mBall.getGlobalBounds().width));
 }
 
-void Ball::SetBallMovement(float dir, float moveSpeed, float ballVert, const float dt)
+void Ball::SetBallMovement(float dir, float ballVert, const float dt)
 {
-	mBall.move(dir * moveSpeed * dt * mLevel, ballVert * dt * (moveSpeed / 5) * mLevel);
+	mBall.move(dir * mSpeed * dt * mLevel, ballVert * dt * (mSpeed / 5) * mLevel);
 }
 
 void Ball::SetRotationDir(bool clockwise)

@@ -2,16 +2,26 @@
 #include "Player.h"
 
 Player::Player(float xPos, float yPos, float max_down_pos, sf::Color color, const sf::Texture* texture, bool second_player)
+	: mDriftUp(false)
+	, mDriftDown(false)
+	, mRight(false)
+	, mLeft(false)
+	, mPlayerAIOn(false)
+	, mSpeedDifficulty(1)
+	, mBallUp(false)
+	, mBallDown(false)
+	, mUp(false)
+	, mDown(false)
 {
-	player.setFillColor(color);
-	player.setTexture(texture);
-	player.setSize(sf::Vector2f(20, 200));
-	player.setPosition(sf::Vector2f(xPos, yPos));
+	mPlayer.setFillColor(color);
+	mPlayer.setTexture(texture);
+	mPlayer.setSize(sf::Vector2f(20, 200));
+	mPlayer.setPosition(sf::Vector2f(xPos, yPos));
 
-	maxPlayerDown = max_down_pos;
-	playerSpeed = 1200.f;
-	secondPlayer = second_player;
-	bPlayerAIOn = false;
+	mMaxPlayerDown = max_down_pos;
+	mPlayerSpeed = 1200.f;
+	mSecondPlayer = second_player;
+	
 }
 
 Player::~Player()
@@ -23,80 +33,80 @@ void Player::PlayerAIDrift(const float& dt)
 {
 
 	//Top of the Screen
-	if (player.getPosition().y - (player.getGlobalBounds().height - 40.f) <= 0)
+	if (mPlayer.getPosition().y - (mPlayer.getGlobalBounds().height - 40.f) <= 0)
 	{
-		player.setPosition(player.getPosition().x, 0.f + (player.getGlobalBounds().height - 40.f));
-		driftDown = true;
-		driftUp = false;
+		mPlayer.setPosition(mPlayer.getPosition().x, 0.f + (mPlayer.getGlobalBounds().height - 40.f));
+		mDriftDown = true;
+		mDriftUp = false;
 	}
 
 	// Player 1 Drift Up
-	if (driftUp)
+	if (mDriftUp)
 	{
-		player.move(0, -.05f * dt * playerSpeed);
+		mPlayer.move(0, -.05f * dt * mPlayerSpeed);
 	}
 
 	//Bottom of the Screen
-	if (player.getPosition().y + player.getGlobalBounds().height >= maxPlayerDown)
+	if (mPlayer.getPosition().y + mPlayer.getGlobalBounds().height >= mMaxPlayerDown)
 	{
-		player.setPosition(player.getPosition().x, maxPlayerDown - player.getGlobalBounds().height);
-		driftDown = false;
-		driftUp = true;
+		mPlayer.setPosition(mPlayer.getPosition().x, mMaxPlayerDown - mPlayer.getGlobalBounds().height);
+		mDriftDown = false;
+		mDriftUp = true;
 	}
 
 	// Player 1 Drift Down
-	if (driftDown)
+	if (mDriftDown)
 	{
-		player.move(0, .05f * dt * playerSpeed);
+		mPlayer.move(0, .05f * dt * mPlayerSpeed);
 	}
 }
 
 void Player::PlayerAIOn(bool AIOn)
 {
 	if (AIOn)
-		bPlayerAIOn = true;
+		mPlayerAIOn = true;
 	else
-		bPlayerAIOn = false;
+		mPlayerAIOn = false;
 }
 
 float Player::GetPlayerYPosition()
 {
-	return player.getPosition().y;
+	return mPlayer.getPosition().y;
 }
 
 void Player::PlayerMoveUP(const float& dt)
 {
-	player.move(0, -.5f * dt * playerSpeed);
-	driftDown = false;
-	driftUp = true;
+	mPlayer.move(0, -.5f * dt * mPlayerSpeed);
+	mDriftDown = false;
+	mDriftUp = true;
 }
 
 void Player::PlayerMoveDown(const float& dt)
 {
-	player.move(0, .5f * dt * playerSpeed);
-	driftDown = true;
-	driftUp = false;
+	mPlayer.move(0, .5f * dt * mPlayerSpeed);
+	mDriftDown = true;
+	mDriftUp = false;
 }
 
 sf::FloatRect Player::GetBounds()
 {
-	return player.getGlobalBounds();
+	return mPlayer.getGlobalBounds();
 }
 
 void Player::Flash(bool change_color)
 {
 	sf::Color flashColor = sf::Color::Red;
 
-	if (secondPlayer)
+	if (mSecondPlayer)
 		flashColor = sf::Color::Blue;
 
 	if (change_color)
 	{
-		player.setFillColor(flashColor);
+		mPlayer.setFillColor(flashColor);
 	}
 	else
 	{
-		player.setFillColor(sf::Color::White);
+		mPlayer.setFillColor(sf::Color::White);
 	}
 }
 
@@ -105,18 +115,18 @@ void Player::PlayerUpgrades(unsigned upgradeVal)
 	switch (upgradeVal)
 	{
 	case 1:
-		if (playerSpeed < 550.f)
-			playerSpeed += 50.f;
+		if (mPlayerSpeed < 550.f)
+			mPlayerSpeed += 50.f;
 		break;
 	
 	case 3:
-		if (player.getSize().y < 130.f)
-			player.setSize(sf::Vector2f(35.f, 130.f));
+		if (mPlayer.getSize().y < 130.f)
+			mPlayer.setSize(sf::Vector2f(35.f, 130.f));
 		break;
 
 	case 6:
-		if (playerSpeed < 700.f)
-			playerSpeed = 700.f; 
+		if (mPlayerSpeed < 700.f)
+			mPlayerSpeed = 700.f; 
 		break;
 	default:
 		break;
@@ -126,52 +136,52 @@ void Player::PlayerUpgrades(unsigned upgradeVal)
 
 void Player::UpdatePlayerMovement(const float& dt)
 {
-	if (!secondPlayer)
+	if (!mSecondPlayer)
 	{
 		// ====================================================================================================
 		// Player 1 Movement
 		// ====================================================================================================
 		if (sf::Keyboard::isKeyPressed(sf::Keyboard::W))
 		{
-			player.move(0, -.5f * dt * playerSpeed);
-			driftDown = false;
-			driftUp = true;
+			mPlayer.move(0, -.5f * dt * mPlayerSpeed);
+			mDriftDown = false;
+			mDriftUp = true;
 		}
 
 		if (sf::Keyboard::isKeyPressed(sf::Keyboard::S))
 		{
-			player.move(0, .5f * dt * playerSpeed);
-			driftDown = true;
-			driftUp = false;
+			mPlayer.move(0, .5f * dt * mPlayerSpeed);
+			mDriftDown = true;
+			mDriftUp = false;
 
 		}
 		// Player 1 Drift Up
-		if (!sf::Keyboard::isKeyPressed(sf::Keyboard::W) && driftUp)
+		if (!sf::Keyboard::isKeyPressed(sf::Keyboard::W) && mDriftUp)
 		{
-			player.move(0, -.05f * dt * playerSpeed);
+			mPlayer.move(0, -.05f * dt * mPlayerSpeed);
 		}
 		// Player 1 Drift Down
-		if (!sf::Keyboard::isKeyPressed(sf::Keyboard::S) && driftDown)
+		if (!sf::Keyboard::isKeyPressed(sf::Keyboard::S) && mDriftDown)
 		{
-			player.move(0, .05f * dt * playerSpeed);
+			mPlayer.move(0, .05f * dt * mPlayerSpeed);
 		}
 
 		//Top of the Screen
-		if (player.getPosition().y - (player.getGlobalBounds().height - 40.f) <= 0)
+		if (mPlayer.getPosition().y - (mPlayer.getGlobalBounds().height - 40.f) <= 0)
 		{
-			player.setPosition(player.getPosition().x, 0.f + (player.getGlobalBounds().height - 40.f));
-			driftDown = true;
-			driftUp = false;
+			mPlayer.setPosition(mPlayer.getPosition().x, 0.f + (mPlayer.getGlobalBounds().height - 40.f));
+			mDriftDown = true;
+			mDriftUp = false;
 		}
 		//Bottom of the Screen
-		if (player.getPosition().y + player.getGlobalBounds().height >= maxPlayerDown)
+		if (mPlayer.getPosition().y + mPlayer.getGlobalBounds().height >= mMaxPlayerDown)
 		{
-			player.setPosition(player.getPosition().x, maxPlayerDown - player.getGlobalBounds().height);
-			driftDown = false;
-			driftUp = true;
+			mPlayer.setPosition(mPlayer.getPosition().x, mMaxPlayerDown - mPlayer.getGlobalBounds().height);
+			mDriftDown = false;
+			mDriftUp = true;
 		}
 	}
-	else if (secondPlayer && !bPlayerAIOn)
+	else if (mSecondPlayer && !mPlayerAIOn)
 	{
 
 		// ====================================================================================================
@@ -179,43 +189,43 @@ void Player::UpdatePlayerMovement(const float& dt)
 		// ====================================================================================================
 		if (sf::Keyboard::isKeyPressed(sf::Keyboard::Up))
 		{
-			player.move(0, -.5f * dt * playerSpeed);
+			mPlayer.move(0, -.5f * dt * mPlayerSpeed);
 
-			driftDown = false;
-			driftUp = true;
+			mDriftDown = false;
+			mDriftUp = true;
 		}
 
 		if (sf::Keyboard::isKeyPressed(sf::Keyboard::Down))
 		{
-			player.move(0, .5f * dt * playerSpeed);
-			driftDown = true;
-			driftUp = false;
+			mPlayer.move(0, .5f * dt * mPlayerSpeed);
+			mDriftDown = true;
+			mDriftUp = false;
 		}
 
 		// Player 1 Drift Up
-		if (!sf::Keyboard::isKeyPressed(sf::Keyboard::Up) && driftUp)
+		if (!sf::Keyboard::isKeyPressed(sf::Keyboard::Up) && mDriftUp)
 		{
-			player.move(0, -.05f * dt * playerSpeed);
+			mPlayer.move(0, -.05f * dt * mPlayerSpeed);
 		}
 		// Player 1 Drift Down
-		if (!sf::Keyboard::isKeyPressed(sf::Keyboard::Down) && driftDown)
+		if (!sf::Keyboard::isKeyPressed(sf::Keyboard::Down) && mDriftDown)
 		{
-			player.move(0, .05f * dt * playerSpeed);
+			mPlayer.move(0, .05f * dt * mPlayerSpeed);
 		}
 
 		//Top of the Screen
-		if (player.getPosition().y - (player.getGlobalBounds().height - 40.f) <= 0)
+		if (mPlayer.getPosition().y - (mPlayer.getGlobalBounds().height - 40.f) <= 0)
 		{
-			player.setPosition(player.getPosition().x, 0.f + (player.getGlobalBounds().height - 40.f));
-			driftDown = true;
-			driftUp = false;
+			mPlayer.setPosition(mPlayer.getPosition().x, 0.f + (mPlayer.getGlobalBounds().height - 40.f));
+			mDriftDown = true;
+			mDriftUp = false;
 		}
 		//Bottom of the Screen
-		if (player.getPosition().y + player.getGlobalBounds().height >= maxPlayerDown)
+		if (mPlayer.getPosition().y + mPlayer.getGlobalBounds().height >= mMaxPlayerDown)
 		{
-			player.setPosition(player.getPosition().x, maxPlayerDown - player.getGlobalBounds().height);
-			driftDown = false;
-			driftUp = true;
+			mPlayer.setPosition(mPlayer.getPosition().x, mMaxPlayerDown - mPlayer.getGlobalBounds().height);
+			mDriftDown = false;
+			mDriftUp = true;
 		}
 	}
 }
@@ -227,5 +237,5 @@ void Player::Update(const float& dt)
 
 void Player::Render(sf::RenderTarget & target)
 {
-	target.draw(player);
+	target.draw(mPlayer);
 }
