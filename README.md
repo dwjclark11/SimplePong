@@ -16,6 +16,11 @@ Right now there is only one state [GameState]; however, I will be added more sta
 | Down | Player 2 Down | 
 
 
+## Gameplay Video
+*    Check this out!
+
+https://user-images.githubusercontent.com/63356975/154179004-c6ba32ff-6fad-44b4-9312-4af3881be296.mp4
+
 ## How to Build
 This project currently uses Visual Studio 2019 Community and has not been tested on different systems/IDEs and it should build 
 direct out of the box.
