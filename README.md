@@ -19,7 +19,7 @@ Right now there is only one state [GameState]; however, I will be added more sta
 ## Gameplay Video
 *    Check this out!
 
-https://user-images.githubusercontent.com/63356975/154179004-c6ba32ff-6fad-44b4-9312-4af3881be296.mp4
+https://user-images.githubusercontent.com/63356975/154179520-2fa466ad-4a80-4edb-a5d3-c225ea1564e1.mp4
 
 ## How to Build
 This project currently uses Visual Studio 2019 Community and has not been tested on different systems/IDEs and it should build 
@@ -32,6 +32,4 @@ direct out of the box.
 * Step 3)
     *  Open the solution and build and run. It should work from there.
    
-## Please enjoy
-![pong](https://user-images.githubusercontent.com/63356975/153973266-194edffa-5afe-4687-bc90-0b0c64514994.gif)
 
