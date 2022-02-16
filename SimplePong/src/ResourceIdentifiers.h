@@ -17,7 +17,12 @@ namespace Textures
 		Player1Paddle,
 		Player2Paddle,
 		Ball,
-		Background_Layer_1
+		Background_Layer_1,
+		Background_Layer_2,
+		Background_Layer_3,
+		Background_Layer_4,
+		Background_Layer_5,
+		MenuBackground,
 
 	};
 }
@@ -28,6 +33,7 @@ namespace Fonts
 	{
 		Main,
 		Goal,
+		MenuTitle,
 
 	};
 }
@@ -42,11 +48,11 @@ namespace SoundEffect
 		Start,
 		Upgrade,
 		UpgradeAvailable,
-		//ButtonUp,
+		ButtonUp,
 		//ButtonDown,
-		//ButtonStart,
+		ButtonSelect,
 		//TitleStart,
-		//BackButton,
+		ButtonCancel ,
 		//Set_EditButton,
 
 	};
@@ -57,7 +63,7 @@ namespace Music
 	enum ID
 	{
 		//TitleTheme,
-		//MenuTheme,
+		MenuTheme,
 		GamePlay,
 
 	};

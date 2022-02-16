@@ -21,6 +21,10 @@ void GameState::InitResources()
 	mTextureHolder.load(Textures::ID::Player2Paddle, "Textures/blue_paddle.png");
 	mTextureHolder.load(Textures::ID::Ball, "Textures/ball_images.png");
 	mTextureHolder.load(Textures::ID::Background_Layer_1, "Textures/parallax-space-backgound.png");
+	mTextureHolder.load(Textures::ID::Background_Layer_2, "Textures/parallax-space-stars.png");
+	mTextureHolder.load(Textures::ID::Background_Layer_3, "Textures/parallax-space-far-planets.png");
+	mTextureHolder.load(Textures::ID::Background_Layer_4, "Textures/parallax-space-ring-planet.png");
+	mTextureHolder.load(Textures::ID::Background_Layer_5, "Textures/parallax-space-big-planet.png");
 	
 	// Init Fonts
 	mFontHolder.load(Fonts::ID::Main, "Fonts/Main.ttf");
@@ -107,7 +111,7 @@ void GameState::InitUITexts()
 
 	sf::Text speedLevel;
 	speedLevel.setFont(mFontHolder.get(Fonts::ID::Main));
-	speedLevel.setCharacterSize(30);
+	speedLevel.setCharacterSize(60);
 	speedLevel.setFillColor(sf::Color::White);
 	speedLevel.setString("SPEED LEVEL: ");
 	speedLevel.setPosition((Game::GetInstance().GetGameWindow()->getSize().x / 2.25) - speedLevel.getGlobalBounds().width, player1Score.getPosition().y - 10.f);
@@ -134,11 +138,16 @@ void GameState::InitUITexts()
 	mGameText.insert(std::make_pair(GameState::GameText::Goal, std::move(goal)));
 	mGameText.insert(std::make_pair(GameState::GameText::Player2_Join, std::move(player2Join)));
 	mGameText.insert(std::make_pair(GameState::GameText::Player1_Upgrade, std::move(player1Upgrade)));
-	mGameText.insert(std::make_pair(GameState::GameText::Player1_Upgrade, std::move(player2Upgrade)));
+	mGameText.insert(std::make_pair(GameState::GameText::Player2_Upgrade, std::move(player2Upgrade)));
 }
 
 void GameState::Init()
 {
+	
+	mTopGUIBlock.setFillColor(sf::Color::Black);
+	mTopGUIBlock.setSize(sf::Vector2f(Game::GetInstance().GetGameWindow()->getSize().x, 100.f));
+	mTopGUIBlock.setPosition(sf::Vector2f(Game::GetInstance().GetGameWindow()->getPosition()));
+
 	InitVariables();
 	InitResources();
 	InitBall();
@@ -158,12 +167,42 @@ void GameState::Init()
 		sf::Color::White, 
 		&mTextureHolder.get(Textures::ID::Player2Paddle), true);
 
+
+	mTextureHolder.get(Textures::ID::Background_Layer_1).setRepeated(true);
+
+	sf::IntRect textureRect(0, 0, 10000.f, Game::GetInstance().GetGameWindow()->getSize().y);
+
 	// Init Background Sprite
-	mBackgroundSprite.setTexture(mTextureHolder.get(Textures::ID::Background_Layer_1));
-	mBackgroundSprite.setScale(sf::Vector2f(7.f, 7.f));
+	sf::Sprite backgroundSprite(mTextureHolder.get(Textures::ID::Background_Layer_1), textureRect);
+	backgroundSprite.setScale(sf::Vector2f(7.f, 7.f));
+
+	
+	sf::Sprite starsSprite;
+	starsSprite.setTexture(mTextureHolder.get(Textures::ID::Background_Layer_2));
+	starsSprite.setScale(sf::Vector2f(7.f, 7.f));
+	
+	sf::Sprite farPlanetsSprite;
+	farPlanetsSprite.setTexture(mTextureHolder.get(Textures::ID::Background_Layer_3));
+	farPlanetsSprite.setScale(sf::Vector2f(7.f, 7.f));
+
+	sf::Sprite ringPlanetsSprite;
+	ringPlanetsSprite.setTexture(mTextureHolder.get(Textures::ID::Background_Layer_4));
+	ringPlanetsSprite.setScale(sf::Vector2f(7.f, 7.f));
+
+	sf::Sprite bigPlanetSprite;
+	bigPlanetSprite.setTexture(mTextureHolder.get(Textures::ID::Background_Layer_5));
+	bigPlanetSprite.setPosition(Game::GetInstance().GetGameWindow()->getSize().x / 2, Game::GetInstance().GetGameWindow()->getSize().y / 2);
+	bigPlanetSprite.setScale(sf::Vector2f(7.f, 7.f));
+
+
+	mBackgroundSprites.insert(std::make_pair(GameState::BackgroundImages::Main, std::move(backgroundSprite)));
+	mBackgroundSprites.insert(std::make_pair(GameState::BackgroundImages::Stars, std::move(starsSprite)));
+	mBackgroundSprites.insert(std::make_pair(GameState::BackgroundImages::Far_Away, std::move(farPlanetsSprite)));
+	mBackgroundSprites.insert(std::make_pair(GameState::BackgroundImages::Ring, std::move(ringPlanetsSprite)));
+	mBackgroundSprites.insert(std::make_pair(GameState::BackgroundImages::Big_Planet, std::move(bigPlanetSprite)));
 }
 
-void GameState::HandleInput()
+void GameState::HandleInput(sf::Event& event)
 {
 
 }
@@ -396,6 +435,34 @@ void GameState::UpdatePlayerUpgrades()
 		default:
 			break;
 		}
+	}
+}
+
+void GameState::UpdateBackground(const float& dt)
+{
+	for (auto& bgSprites : mBackgroundSprites)
+	{
+		if (bgSprites.first == GameState::BackgroundImages::Main)
+			bgSprites.second.move(sf::Vector2f(-10.f * mCurrentSpeedLevel * dt, 0.f));
+		
+		if (bgSprites.first == GameState::BackgroundImages::Stars)
+			bgSprites.second.move(sf::Vector2f(-35.f  * mCurrentSpeedLevel * dt, 0.f));
+
+		if (bgSprites.first == GameState::BackgroundImages::Far_Away)
+			bgSprites.second.move(sf::Vector2f(-40.f * mCurrentSpeedLevel * dt, 0.f));
+
+		if (bgSprites.first == GameState::BackgroundImages::Ring)
+			bgSprites.second.move(sf::Vector2f(-45.f * mCurrentSpeedLevel * dt, 0.f));
+
+		if (bgSprites.first == GameState::BackgroundImages::Big_Planet)
+			bgSprites.second.move(sf::Vector2f(-10.f * mCurrentSpeedLevel * dt, 0.f));
+
+		// Have a constant speed for all objects if the current level is zero
+		if (mCurrentSpeedLevel == 0)
+			bgSprites.second.move(sf::Vector2f(-10.f * dt, 0.f));
+
+		if (bgSprites.first != GameState::BackgroundImages::Main && bgSprites.second.getPosition().x < -1920.f)
+			bgSprites.second.setPosition(Game::GetInstance().GetGameWindow()->getSize().x, 0);
 	}
 }
 
@@ -673,11 +740,19 @@ void GameState::Update(const float& dt)
 	UpdateBallColors();
 	UpdatePlayerScores();
 	UpdatePlayerUpgrades();
+	UpdateBackground(dt);
+	// Remove the sounds if they are not playing
+	mSoundPlayer.removeStoppedSounds();
 }
 
 void GameState::Render(const float& dt)
 {
-	Game::GetInstance().GetGameWindow()->draw(mBackgroundSprite);
+	for (auto& bgSprite : mBackgroundSprites)
+	{
+		Game::GetInstance().GetGameWindow()->draw(bgSprite.second);
+	}
+
+	Game::GetInstance().GetGameWindow()->draw(mTopGUIBlock);
 
 	mPlayerA->Render(*Game::GetInstance().GetGameWindow());
 	mPlayerB->Render(*Game::GetInstance().GetGameWindow());

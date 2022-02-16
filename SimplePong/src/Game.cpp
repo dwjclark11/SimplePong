@@ -1,15 +1,15 @@
 #include "stdafx.h"
 #include "Game.h"
-#include "GameState.h"
+#include "MenuState.h"
 
 std::unique_ptr<Game> Game::mInstance = nullptr;
 
 
 void Game::initWindow()
 {
-	mWindow.reset(new sf::RenderWindow(sf::VideoMode(1920, 1080), "Simple Pong", sf::Style::Default));
+	mWindow.reset(new sf::RenderWindow(sf::VideoMode(1920, 1080), "Simple Pong", sf::Style::Fullscreen));
 	mWindow->setFramerateLimit(60);
-	mWindow->setVerticalSyncEnabled(false);
+	mWindow->setVerticalSyncEnabled(true);
 }
 
 //void Game::initUI()
@@ -77,7 +77,6 @@ void Game::initWindow()
 Game::Game()
 {
 	initWindow();
-
 }
 
 Game::~Game()
@@ -85,63 +84,13 @@ Game::~Game()
 	
 }
 
-
 void Game::updateDeltaTime()
 {
 	mDt = mDtClock.restart().asSeconds();
 }
 
-
-//void Game::updatePlayerUpgrades()
-//{
-//	if ((sf::Keyboard::isKeyPressed(sf::Keyboard::LShift)) || mPlayerA->IsPlayerAI() && mP1UpgradeAvailable)
-//	{
-//		switch (mPScore1)
-//		{
-//
-//		case 1:
-//			mPlayerA->PlayerUpgrades(mPScore1);
-//			//mUpgrade.play();
-//			mP1UpgradeAvailable = false;
-//			mUpgradeAccepted1 = true;
-//			break;
-//		case 3:
-//			//mUpgrade.play();
-//			mPlayerA->PlayerUpgrades(mPScore1);
-//			mP1UpgradeAvailable = false;
-//			mUpgradeAccepted1 = true;
-//			break;
-//		default:
-//			break;
-//		}
-//	}
-//
-//	if ((sf::Keyboard::isKeyPressed(sf::Keyboard::RShift)) || mPlayerB->IsPlayerAI() && mP2UpgradeAvailable)
-//	{
-//		switch (mPScore2)
-//		{
-//			case 1:
-//			mPlayerB->PlayerUpgrades(mPScore2);
-//			//mUpgrade.play();
-//			mP2UpgradeAvailable = false;
-//			mUpgradeAccepted2 = true;
-//			break;
-//
-//			case 3:
-//			mPlayerB->PlayerUpgrades(mPScore2);
-//			//mUpgrade.play();
-//			mP2UpgradeAvailable = false;
-//			mUpgradeAccepted2 = true;
-//			break;
-//		default:
-//			break;
-//		}
-//	}
-//}
-
 void Game::update()
 {
-
 	updateDeltaTime();
 
 	mGameStateMachine->Update(mDt);
@@ -150,8 +99,11 @@ void Game::update()
 	if (sf::Keyboard::isKeyPressed(sf::Keyboard::Escape))
 		mWindow->close();
 
-	sf::Event event;
+}
 
+void Game::HandleInputs()
+{
+	sf::Event event;
 	while (mWindow->pollEvent(event))
 	{
 		if (event.type == sf::Event::Closed)
@@ -160,7 +112,7 @@ void Game::update()
 		}
 	}
 
-
+	mGameStateMachine->HandleInputs(event);
 }
 
 void Game::render()
@@ -168,18 +120,7 @@ void Game::render()
 	// Render the mWindow 
 	mWindow->clear(sf::Color(0, 0, 0, 255));
 
-	mWindow->draw(mTopGUIBlock);
 	mGameStateMachine->Render(mDt);
-
-	//// Render Player mUpgrade Text
-	//if (mTurnOnAI && mFlash)
-	//	mWindow->draw(mPlayer2Join);
-
-	//if (mP1UpgradeAvailable)
-	//	mWindow->draw(mPlayer1Upgrade);
-
-	//if (mP2UpgradeAvailable)
-	//	mWindow->draw(mPlayer2Upgrade);
 
 	//if (mUpgradeAccepted1)
 	//	mWindow->draw(mP1UpgradeType);
@@ -193,14 +134,14 @@ void Game::render()
 
 void Game::run()
 {
-	
 	mGameStateMachine = std::make_unique<StateMachine>();
-	mGameStateMachine->AddState(std::make_unique<GameState>());
+	mGameStateMachine->AddState(std::make_unique<MenuState>());
 	mGameStateMachine->ChangeState();
 
 	
 	while (mWindow->isOpen())
 	{
+		HandleInputs();
 		update();
 		render();
 	}

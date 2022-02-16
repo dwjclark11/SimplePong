@@ -65,11 +65,11 @@ void StateMachine::Update(const float& dt)
 	}
 }
 
-void StateMachine::HandleInputs()
+void StateMachine::HandleInputs(sf::Event& event)
 {
 	if (!mStates.empty())
 	{
-		mStates.top()->HandleInput();
+		mStates.top()->HandleInput(event);
 	}
 }
 

@@ -26,6 +26,15 @@ private:
 		Player2_Join,
 	};
 
+	enum class BackgroundImages
+	{
+		Main, 
+		Stars,
+		Far_Away,
+		Ring,
+		Big_Planet
+	};
+
 	std::unique_ptr<class Player> mPlayerA;
 	std::unique_ptr<class Player> mPlayerB;
 	
@@ -33,6 +42,7 @@ private:
 	
 	std::map<UIText, sf::Text> mUIText;
 	std::map<GameText, sf::Text> mGameText;
+	std::map<BackgroundImages, sf::Sprite> mBackgroundSprites;
 
 	sf::Texture mRedPaddleTexture;
 	sf::Texture mBluePaddleTexture;
@@ -47,7 +57,8 @@ private:
 	SoundPlayer			mSoundPlayer;
 	MusicPlayer		    mMusicPlayer;
 
-	sf::Sprite mBackgroundSprite;
+	sf::RectangleShape mTopGUIBlock;
+
 
 	float mInterTimer;
 	float mFlasher;
@@ -92,7 +103,7 @@ public:
 	void InitUITexts();
 
 	virtual void Init() override;
-	virtual void HandleInput() override;
+	virtual void HandleInput(sf::Event& event) override;
 
 	void UpdateAI(const float& dt);
 	void UpdateUI();
@@ -102,7 +113,7 @@ public:
 	// Player Updates
 	void UpdatePlayerScores();
 	void UpdatePlayerUpgrades();
-	
+	void UpdateBackground(const float& dt);
 	// Ball Updates
 	void UpdateBallMovement(const float& dt);
 	void UpdateBallRotation(const float& dt);

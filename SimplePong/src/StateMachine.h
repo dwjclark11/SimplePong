@@ -16,7 +16,7 @@ public:
 
 	void ChangeState();
 	void Update(const float& dt);
-	void HandleInputs();
+	void HandleInputs(sf::Event& event);
 	void Render(const float& dt );
 	
 	StateRef& GetCurrentState();

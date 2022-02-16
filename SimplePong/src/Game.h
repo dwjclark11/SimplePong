@@ -12,8 +12,14 @@
 	GamePlay Music -
 		These song was found at (https://opengameart.org/content/pong-graphics) and created by Trevor Lents!
 
+	Menu Theme - 'Warped'
+		This was made by Alexander Ehlers, find it at (https://opengameart.org/content/free-music-pack)
+
 	Background Textures - 
 		(https://opengameart.org/content/space-background-3)
+
+	Menu Title Fonts -
+		Astonished Fonts by Eduardo Recife / Misprinted Type @ (http://ww.misprintedtype.com)
 */
 
 
@@ -36,7 +42,7 @@ private:
 	std::unique_ptr<sf::RenderWindow> mWindow;
 
 
-	sf::RectangleShape mTopGUIBlock;
+	
 
 	Game();
 	// How do I avoid this?
@@ -60,10 +66,13 @@ public:
 	void initWindow();
 
 	const std::unique_ptr<sf::RenderWindow>& GetGameWindow() const { return mWindow; }
+	const std::unique_ptr<StateMachine>& GetStateMachine() const { return mGameStateMachine; }
+
 	void updateDeltaTime();
 
 	
 	void update();
+	void HandleInputs();
 	void render();
 	void run();
 

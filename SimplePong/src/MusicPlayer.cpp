@@ -7,7 +7,7 @@ MusicPlayer::MusicPlayer()
 	, mVolume(20.f)
 {
 	//mFilenames[Music::MenuTheme] = "Music/Main.ogg";
-	//mFilenames[Music::TitleTheme] = "Music/TitleTheme.ogg";
+	mFilenames[Music::MenuTheme] = "Music/MenuTheme.wav";
 	mFilenames[Music::GamePlay] = "Music/Just Move.ogg";
 	main = false;
 	pause = false;

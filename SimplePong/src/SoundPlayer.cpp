@@ -16,7 +16,7 @@ namespace
 }
 
 SoundPlayer::SoundPlayer()
-	:mSoundBuffers()
+	: mSoundBuffers()
 	, mSounds()
 {
 	mSoundBuffers.load(SoundEffect::Bounce1, "Sounds/paddle_1_hit.wav");
@@ -24,7 +24,9 @@ SoundPlayer::SoundPlayer()
 	mSoundBuffers.load(SoundEffect::Start, "Sounds/Ball_Start.wav");
 	mSoundBuffers.load(SoundEffect::Upgrade, "Sounds/Upgrade.wav");
 	//mSoundBuffers.load(SoundEffect::ButtonDown, "Sounds/cursorDown.ogg");
-	//mSoundBuffers.load(SoundEffect::ButtonUp, "Sounds/cursorUp.ogg");
+	mSoundBuffers.load(SoundEffect::ButtonUp, "Sounds/ButtonUp.wav");
+	mSoundBuffers.load(SoundEffect::ButtonSelect, "Sounds/ButtonSelect.wav");
+	mSoundBuffers.load(SoundEffect::ButtonCancel, "Sounds/ButtonCancel.wav");
 	//mSoundBuffers.load(SoundEffect::TitleStart, "Sounds/TitleStart.ogg");
 	//mSoundBuffers.load(SoundEffect::ButtonStart, "Sounds/Start.ogg");
 	//mSoundBuffers.load(SoundEffect::BackButton, "Sounds/BackButton.ogg");
@@ -57,6 +59,7 @@ void SoundPlayer::removeStoppedSounds()
 		{
 			return s.getStatus() == sf::Sound::Stopped;
 		});
+	
 }
 
 void SoundPlayer::setListenerPosition(sf::Vector2f position)
