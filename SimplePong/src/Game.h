@@ -1,8 +1,11 @@
 #pragma once
 #include "Player.h"
 #include "MusicPlayer.h"
+#include "SoundPlayer.h"
 #include "Ball.h"
 #include "StateMachine.h"
+#include "ResourceIdentifiers.h"
+
 
 /*
 	Paddle Textures -
@@ -25,6 +28,15 @@
 
 class Game
 {
+public: 
+	enum class GameDifficulty
+	{
+		Easy = 0,
+		Medium,
+		Hard,
+		Impossible
+	};
+
 private: 
 
 	std::unique_ptr<StateMachine> mGameStateMachine;
@@ -33,25 +45,25 @@ private:
 
 	float mDt;
 
-	bool mEasy;
-	bool mMedium;
-	bool mHard;
-	bool mImpossible;
-
+	GameDifficulty mDifficulty;
 	
 	std::unique_ptr<sf::RenderWindow> mWindow;
-
-
+	FontHolder mFontHolder;
+	TextureHolder mTextureHolder;
+	MusicPlayer mMusicPlayer;
+	SoundPlayer mSoundPlayer;
 	
-
 	Game();
 	// How do I avoid this?
 	static std::unique_ptr<Game> mInstance;
 
+	void initWindow();
+	void InitFonts();
+	void InitTextures();
 public:
 
 	~Game();
-
+	
 	static Game& GetInstance()
 	{
 		if (mInstance == nullptr)
@@ -62,11 +74,18 @@ public:
 		return *mInstance;
 	}
 
-	
-	void initWindow();
 
 	const std::unique_ptr<sf::RenderWindow>& GetGameWindow() const { return mWindow; }
 	const std::unique_ptr<StateMachine>& GetStateMachine() const { return mGameStateMachine; }
+
+	const FontHolder& GetFonts() const { return mFontHolder; }
+	const TextureHolder& GetTextures() const { return mTextureHolder; }
+	
+	const GameDifficulty& GetDifficulty() const { return mDifficulty; }
+	void SetGameDifficulty(Game::GameDifficulty difficulty) { mDifficulty = difficulty; }
+
+	MusicPlayer& GetMusicPlayer() { return mMusicPlayer; }
+	SoundPlayer& GetSoundPlayer() { return mSoundPlayer; }
 
 	void updateDeltaTime();
 

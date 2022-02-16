@@ -5,8 +5,10 @@
 
 
 GameState::GameState()
+	: game(Game::GetInstance())
+	, mBallMultiplier(4)
 {
-	//std::cout << "Creating Game state!\n";
+	
 }
 
 GameState::~GameState()
@@ -16,24 +18,9 @@ GameState::~GameState()
 
 void GameState::InitResources()
 {
-	// Init Textures
-	mTextureHolder.load(Textures::ID::Player1Paddle, "Textures/red_paddle.png");
-	mTextureHolder.load(Textures::ID::Player2Paddle, "Textures/blue_paddle.png");
-	mTextureHolder.load(Textures::ID::Ball, "Textures/ball_images.png");
-	mTextureHolder.load(Textures::ID::Background_Layer_1, "Textures/parallax-space-backgound.png");
-	mTextureHolder.load(Textures::ID::Background_Layer_2, "Textures/parallax-space-stars.png");
-	mTextureHolder.load(Textures::ID::Background_Layer_3, "Textures/parallax-space-far-planets.png");
-	mTextureHolder.load(Textures::ID::Background_Layer_4, "Textures/parallax-space-ring-planet.png");
-	mTextureHolder.load(Textures::ID::Background_Layer_5, "Textures/parallax-space-big-planet.png");
-	
-	// Init Fonts
-	mFontHolder.load(Fonts::ID::Main, "Fonts/Main.ttf");
-	mFontHolder.load(Fonts::ID::Goal, "Fonts/Goal1.ttf");
-
-
 	// Start GamePlay Music
-	mMusicPlayer.setVolume(15);
-	mMusicPlayer.play(Music::GamePlay);
+	game.GetMusicPlayer().setVolume(15);
+	game.GetMusicPlayer().play(Music::GamePlay);
 }
 
 void GameState::InitVariables()
@@ -73,58 +60,76 @@ void GameState::InitVariables()
 
 void GameState::InitBall()
 {
-	Ball ball(50.f, &mTextureHolder.get(Textures::ID::Ball));
+	Ball ball(50.f, &game.GetTextures().get(Textures::ID::Ball));
 	ball.SetStartPosition(*Game::GetInstance().GetGameWindow());
 
 	mBalls.push_back(ball);
+
+	switch(game.GetDifficulty())
+	{
+	case Game::GameDifficulty::Easy:
+		mBallMultiplier = 5;
+		break;
+	case Game::GameDifficulty::Medium:
+		mBallMultiplier = 4;
+		break;
+	case Game::GameDifficulty::Hard:
+		mBallMultiplier = 3;
+		break;
+	case Game::GameDifficulty::Impossible:
+		mBallMultiplier = 2;
+		break;
+
+	}
+
 }
 
 void GameState::InitUITexts()
 {
 	sf::Text player1Score;
-	player1Score.setFont(mFontHolder.get(Fonts::ID::Main));
+	player1Score.setFont(game.GetFonts().get(Fonts::ID::Main));
 	player1Score.setCharacterSize(30);
 	player1Score.setFillColor(sf::Color::White);
 	player1Score.setString("SCORE: ");
-	player1Score.setPosition(Game::GetInstance().GetGameWindow()->getSize().x / 20, 20.f);
+	player1Score.setPosition(game.GetGameWindow()->getSize().x / 20, 20.f);
 
 	sf::Text player2Score;
-	player2Score.setFont(mFontHolder.get(Fonts::ID::Main));
+	player2Score.setFont(game.GetFonts().get(Fonts::ID::Main));
 	player2Score.setCharacterSize(30);
 	player2Score.setFillColor(sf::Color::White);
 	player2Score.setString("SCORE: ");
 	player2Score.setPosition(player1Score.getPosition().x + 1500.f, player1Score.getPosition().y);
 
 	sf::Text goal;
-	goal.setFont(mFontHolder.get(Fonts::ID::Goal));
+	goal.setFont(game.GetFonts().get(Fonts::ID::Goal));
 	goal.setCharacterSize(100);
 	goal.setFillColor(sf::Color::White);
 	goal.setString("GOAL!!");
-	goal.setPosition(Game::GetInstance().GetGameWindow()->getSize().x / 2.5, Game::GetInstance().GetGameWindow()->getSize().y / 4);
+	goal.setPosition(game.GetGameWindow()->getSize().x / 2.5, game.GetGameWindow()->getSize().y / 4);
 
 	sf::Text player2Join;
-	player2Join.setFont(mFontHolder.get(Fonts::ID::Main));
+	player2Join.setFont(game.GetFonts().get(Fonts::ID::Main));
 	player2Join.setCharacterSize(30);
 	player2Join.setFillColor(sf::Color::White);
 	player2Join.setString("PLAYER 2 PRESS SPACE\nTO JOIN GAME!");
 	player2Join.setPosition(player1Score.getPosition().x + 1150.f, player1Score.getPosition().y - 10.f);
 
 	sf::Text speedLevel;
-	speedLevel.setFont(mFontHolder.get(Fonts::ID::Main));
+	speedLevel.setFont(game.GetFonts().get(Fonts::ID::Main));
 	speedLevel.setCharacterSize(60);
 	speedLevel.setFillColor(sf::Color::White);
 	speedLevel.setString("SPEED LEVEL: ");
-	speedLevel.setPosition((Game::GetInstance().GetGameWindow()->getSize().x / 2.25) - speedLevel.getGlobalBounds().width, player1Score.getPosition().y - 10.f);
+	speedLevel.setPosition((game.GetGameWindow()->getSize().x / 2.25) - speedLevel.getGlobalBounds().width, player1Score.getPosition().y - 10.f);
 
 	sf::Text player1Upgrade;
-	player1Upgrade.setFont(mFontHolder.get(Fonts::ID::Main));
+	player1Upgrade.setFont(game.GetFonts().get(Fonts::ID::Main));
 	player1Upgrade.setCharacterSize(30);
 	player1Upgrade.setFillColor(sf::Color::White);
 	player1Upgrade.setString("PLAYER 1: Upgrade Available!");
 	player1Upgrade.setPosition(Game::GetInstance().GetGameWindow()->getSize().x / 12, Game::GetInstance().GetGameWindow()->getSize().y / 6);
 
 	sf::Text player2Upgrade;
-	player2Upgrade.setFont(mFontHolder.get(Fonts::ID::Main));
+	player2Upgrade.setFont(game.GetFonts().get(Fonts::ID::Main));
 	player2Upgrade.setCharacterSize(30);
 	player2Upgrade.setFillColor(sf::Color::White);
 	player2Upgrade.setString("PLAYER 2: Upgrade Available!");
@@ -157,41 +162,50 @@ void GameState::Init()
 		50.f, Game::GetInstance().GetGameWindow()->getSize().y / 2.f, 
 		Game::GetInstance().GetGameWindow()->getSize().y / 1.f, 
 		sf::Color::White, 
-		&mTextureHolder.get(Textures::ID::Player1Paddle), false);
+		&game.GetTextures().get(Textures::ID::Player1Paddle), false);
 
 	// Init Player B
 	mPlayerB = std::make_unique<Player>(
-		Game::GetInstance().GetGameWindow()->getSize().x - 150.f, 
-		Game::GetInstance().GetGameWindow()->getSize().y / 2.f, 
-		Game::GetInstance().GetGameWindow()->getSize().y / 1.f, 
+		game.GetGameWindow()->getSize().x - 150.f, 
+		game.GetGameWindow()->getSize().y / 2.f, 
+		game.GetGameWindow()->getSize().y / 1.f, 
 		sf::Color::White, 
-		&mTextureHolder.get(Textures::ID::Player2Paddle), true);
+		&game.GetTextures().get(Textures::ID::Player2Paddle), true);
+	mPlayerB->PlayerAIOn(true);
+	
+	// Set the AI Speed Based on the difficulty
+	if (game.GetDifficulty() == Game::GameDifficulty::Easy)
+		mPlayerB->IncreasePlayerSpeed(0.f);
+	else if (game.GetDifficulty() == Game::GameDifficulty::Medium)
+		mPlayerB->IncreasePlayerSpeed(50.f);
+	else if (game.GetDifficulty() == Game::GameDifficulty::Hard)
+		mPlayerB->IncreasePlayerSpeed(150.f);
+	else if (game.GetDifficulty() == Game::GameDifficulty::Medium)
+		mPlayerB->IncreasePlayerSpeed(300.f);
 
-
-	mTextureHolder.get(Textures::ID::Background_Layer_1).setRepeated(true);
-
+	// This is the texture rext size for the main background --> Repeating
 	sf::IntRect textureRect(0, 0, 10000.f, Game::GetInstance().GetGameWindow()->getSize().y);
 
 	// Init Background Sprite
-	sf::Sprite backgroundSprite(mTextureHolder.get(Textures::ID::Background_Layer_1), textureRect);
+	sf::Sprite backgroundSprite(game.GetTextures().get(Textures::ID::Background_Layer_1), textureRect);
 	backgroundSprite.setScale(sf::Vector2f(7.f, 7.f));
 
 	
 	sf::Sprite starsSprite;
-	starsSprite.setTexture(mTextureHolder.get(Textures::ID::Background_Layer_2));
+	starsSprite.setTexture(game.GetTextures().get(Textures::ID::Background_Layer_2));
 	starsSprite.setScale(sf::Vector2f(7.f, 7.f));
 	
 	sf::Sprite farPlanetsSprite;
-	farPlanetsSprite.setTexture(mTextureHolder.get(Textures::ID::Background_Layer_3));
+	farPlanetsSprite.setTexture(game.GetTextures().get(Textures::ID::Background_Layer_3));
 	farPlanetsSprite.setScale(sf::Vector2f(7.f, 7.f));
 
 	sf::Sprite ringPlanetsSprite;
-	ringPlanetsSprite.setTexture(mTextureHolder.get(Textures::ID::Background_Layer_4));
+	ringPlanetsSprite.setTexture(game.GetTextures().get(Textures::ID::Background_Layer_4));
 	ringPlanetsSprite.setScale(sf::Vector2f(7.f, 7.f));
 
 	sf::Sprite bigPlanetSprite;
-	bigPlanetSprite.setTexture(mTextureHolder.get(Textures::ID::Background_Layer_5));
-	bigPlanetSprite.setPosition(Game::GetInstance().GetGameWindow()->getSize().x / 2, Game::GetInstance().GetGameWindow()->getSize().y / 2);
+	bigPlanetSprite.setTexture(game.GetTextures().get(Textures::ID::Background_Layer_5));
+	bigPlanetSprite.setPosition(game.GetGameWindow()->getSize().x / 2, game.GetGameWindow()->getSize().y / 2);
 	bigPlanetSprite.setScale(sf::Vector2f(7.f, 7.f));
 
 
@@ -211,55 +225,16 @@ void GameState::UpdateAI(const float& dt)
 {
 	for (auto& ball : mBalls)
 	{
-		if (mTurnOnAI && mMedium)
+		if (ball.GetBallRight() && ball.GetPosition().y < mPlayerB->GetPlayerYPosition())
 		{
-			mPlayerB->PlayerAIOn(true);
-
-			if (ball.GetBallRight() && ball.GetPosition().y < mPlayerB->GetPlayerYPosition())
-			{
-				//std::cout << ball.GetPosition().y << ", " << mPlayerB->GetPlayerYPosition() << "\n";
-				mPlayerB->PlayerMoveUP(dt);
-			}
-
-			else if (ball.GetBallRight() && ball.GetPosition().y > mPlayerB->GetPlayerYPosition())
-			{
-				//std::cout << ball.GetPosition().y << ", " << mPlayerB->GetPlayerYPosition() << "\n";
-				mPlayerB->PlayerMoveDown(dt);
-			}
+			//std::cout << ball.GetPosition().y << ", " << mPlayerB->GetPlayerYPosition() << "\n";
+			mPlayerB->PlayerMoveUP(dt);
 		}
-		else if (mTurnOnAI && mHard)
+
+		else if (ball.GetBallRight() && ball.GetPosition().y > mPlayerB->GetPlayerYPosition())
 		{
-			mPlayerB->PlayerAIOn(true);
-			//mMovementSpeed = 800;
-			if (ball.GetPosition().y < mPlayerB->GetPlayerYPosition())
-			{
-				//std::cout << ball.GetPosition().y << ", " << mPlayerB->GetPlayerYPosition() << "\n";
-				mPlayerB->PlayerMoveUP(dt);
-			}
-
-			else if (ball.GetPosition().y > mPlayerB->GetPlayerYPosition())
-			{
-				//std::cout << ball.GetPosition().y << ", " << mPlayerB->GetPlayerYPosition() << "\n";
-				mPlayerB->PlayerMoveDown(dt);
-			}
-		}
-		else if (mTurnOnAI && mImpossible)
-		{
-			mPlayerB->PlayerAIOn(true);
-
-			//mMovementSpeed = 1000.f;
-			//ball.GetBall().setRadius(15.f);
-			if (ball.GetPosition().y < mPlayerB->GetPlayerYPosition())
-			{
-				//std::cout << ball.GetPosition().y << ", " << mPlayerB->GetPlayerYPosition() << "\n";
-				mPlayerB->PlayerMoveUP(dt);
-			}
-
-			else if (ball.GetPosition().y > mPlayerB->GetPlayerYPosition())
-			{
-				//std::cout << ball.GetPosition().y << ", " << mPlayerB->GetPlayerYPosition() << "\n";
-				mPlayerB->PlayerMoveDown(dt);
-			}
+			//std::cout << ball.GetPosition().y << ", " << mPlayerB->GetPlayerYPosition() << "\n";
+			mPlayerB->PlayerMoveDown(dt);
 		}
 	}
 
@@ -340,7 +315,7 @@ void GameState::UpdatePlayerScores()
 
 	if (mPlayer1Scored)
 	{
-		mSoundPlayer.play(SoundEffect::ID::Goal);
+		game.GetSoundPlayer().play(SoundEffect::ID::Goal);
 		mPScore1++;
 		mPlayer1Scored = false;
 		mGoals = true;
@@ -366,7 +341,7 @@ void GameState::UpdatePlayerScores()
 
 	if (mPlayer2Scored)
 	{
-		mSoundPlayer.play(SoundEffect::ID::Goal);
+		game.GetSoundPlayer().play(SoundEffect::ID::Goal);
 		mPScore2++;
 		mPlayer2Scored = false;
 		mGoals = true;
@@ -400,12 +375,12 @@ void GameState::UpdatePlayerUpgrades()
 
 		case 1:
 			mPlayerA->PlayerUpgrades(mPScore1);
-			mSoundPlayer.play(SoundEffect::ID::Upgrade);
+			game.GetSoundPlayer().play(SoundEffect::ID::Upgrade);
 			mP1UpgradeAvailable = false;
 			mUpgradeAccepted1 = true;
 			break;
 		case 3:
-			mSoundPlayer.play(SoundEffect::ID::Upgrade);
+			game.GetSoundPlayer().play(SoundEffect::ID::Upgrade);
 			mPlayerA->PlayerUpgrades(mPScore1);
 			mP1UpgradeAvailable = false;
 			mUpgradeAccepted1 = true;
@@ -421,14 +396,14 @@ void GameState::UpdatePlayerUpgrades()
 		{
 			case 1:
 			mPlayerB->PlayerUpgrades(mPScore2);
-			mSoundPlayer.play(SoundEffect::ID::Upgrade);
+			game.GetSoundPlayer().play(SoundEffect::ID::Upgrade);
 			mP2UpgradeAvailable = false;
 			mUpgradeAccepted2 = true;
 			break;
 
 			case 3:
 			mPlayerB->PlayerUpgrades(mPScore2);
-			mSoundPlayer.play(SoundEffect::ID::Upgrade);
+			game.GetSoundPlayer().play(SoundEffect::ID::Upgrade);
 			mP2UpgradeAvailable = false;
 			mUpgradeAccepted2 = true;
 			break;
@@ -478,7 +453,7 @@ void GameState::UpdateBallMovement(const float& dt)
 		if ((sf::Keyboard::isKeyPressed(sf::Keyboard::Enter)/* || ball.GetSpeed() == 0.f*/) && !ball.GetBallLeft() && !ball.GetBallRight())
 		{
 
-			//mMusicPlayer.setPitch(1.0f);
+			game.GetMusicPlayer().setPitch(1.0f);
 			// Random direction Generators
 			unsigned dir = rand() % 2 + 1;
 			unsigned dir1 = rand() % 2 + 1;
@@ -501,7 +476,7 @@ void GameState::UpdateBallMovement(const float& dt)
 			// Set the ball speed to the movement speed
 			ball.SetSpeed(mMovementSpeed);
 			
-			mSoundPlayer.play(SoundEffect::ID::Start);
+			game.GetSoundPlayer().play(SoundEffect::ID::Start);
 		}
 
 		// Check For mPlayerA/Ball Collision
@@ -525,7 +500,7 @@ void GameState::UpdateBallMovement(const float& dt)
 			mPlayerA->Flash(true);
 			mSpeedDifficulty++;
 			
-			mSoundPlayer.play(SoundEffect::ID::Bounce1);
+			game.GetSoundPlayer().play(SoundEffect::ID::Bounce1);
 
 			mInterClock.restart();
 
@@ -561,7 +536,7 @@ void GameState::UpdateBallMovement(const float& dt)
 			mPlayerB->Flash(true);
 			mSpeedDifficulty++;
 
-			mSoundPlayer.play(SoundEffect::ID::Bounce1);
+			game.GetSoundPlayer().play(SoundEffect::ID::Bounce1);
 			mInterClock.restart();
 		}
 		else
@@ -658,7 +633,7 @@ void GameState::UpdateBallSpeed(const float& dt)
 			//mMovementSpeed *= 1.25f;
 			mCurrentSpeedLevel++;
 			mSpeedDifficulty = 0;
-			//mMusicPlayer.setPitch(mCurrentSpeedLevel * 0.1 + 1);
+			game.GetMusicPlayer().setPitch(mCurrentSpeedLevel * 0.1 + 1);
 		}
 		else if (mSpeedDifficulty > 9)
 		{
@@ -667,12 +642,12 @@ void GameState::UpdateBallSpeed(const float& dt)
 	}
 
 	// Add a new ball after speed level get so high
-	if (temp != mCurrentSpeedLevel && mCurrentSpeedLevel % 4 == 0)
+	if (temp != mCurrentSpeedLevel && mCurrentSpeedLevel % mBallMultiplier == 0)
 	{
-		Ball newBall(50.0f, &mTextureHolder.get(Textures::ID::Ball));
+		Ball newBall(50.0f, &game.GetTextures().get(Textures::ID::Ball));
 		mBalls.push_back(newBall);
 
-		newBall.SetStartPosition(*Game::GetInstance().GetGameWindow());
+		newBall.SetStartPosition(*game.GetGameWindow());
 		temp = mCurrentSpeedLevel;
 	}
 }
@@ -732,34 +707,38 @@ void GameState::Update(const float& dt)
 	mPlayerA->Update(dt);
 	mPlayerB->Update(dt);
 	
-	UpdateAI(dt);
+
 	UpdateBallMovement(dt);
 	UpdateBallRotation(dt);
 	UpdateBallCollision(dt);
 	UpdateBallSpeed(dt);
 	UpdateBallColors();
+
+	// Only Update AI if single player
+	if (mPlayerB->IsPlayerAI()) UpdateAI(dt);
+
 	UpdatePlayerScores();
 	UpdatePlayerUpgrades();
 	UpdateBackground(dt);
+
 	// Remove the sounds if they are not playing
-	mSoundPlayer.removeStoppedSounds();
+	game.GetSoundPlayer().removeStoppedSounds();
 }
 
 void GameState::Render(const float& dt)
 {
 	for (auto& bgSprite : mBackgroundSprites)
 	{
-		Game::GetInstance().GetGameWindow()->draw(bgSprite.second);
+		game.GetGameWindow()->draw(bgSprite.second);
 	}
+	game.GetGameWindow()->draw(mTopGUIBlock);
 
-	Game::GetInstance().GetGameWindow()->draw(mTopGUIBlock);
-
-	mPlayerA->Render(*Game::GetInstance().GetGameWindow());
-	mPlayerB->Render(*Game::GetInstance().GetGameWindow());
+	mPlayerA->Render(*game.GetGameWindow());
+	mPlayerB->Render(*game.GetGameWindow());
 
 	// Draw Ball
 	for (auto& ball : mBalls)
-		Game::GetInstance().GetGameWindow()->draw(ball.GetBall());
+		game.GetGameWindow()->draw(ball.GetBall());
 
 	// Draw UI Text
 	for (auto& text : mUIText)
@@ -768,15 +747,15 @@ void GameState::Render(const float& dt)
 	}
 	
 	if (mP1UpgradeAvailable)
-		Game::GetInstance().GetGameWindow()->draw(mGameText.at(GameState::GameText::Player1_Upgrade));
+		game.GetGameWindow()->draw(mGameText.at(GameState::GameText::Player1_Upgrade));
 
 	if (mP2UpgradeAvailable)
-		Game::GetInstance().GetGameWindow()->draw(mGameText.at(GameState::GameText::Player2_Upgrade));
+		game.GetGameWindow()->draw(mGameText.at(GameState::GameText::Player2_Upgrade));
 
 	if (mTurnOnAI && mFlash)
-		Game::GetInstance().GetGameWindow()->draw(mGameText.at(GameState::GameText::Player2_Join));
+		game.GetGameWindow()->draw(mGameText.at(GameState::GameText::Player2_Join));
 
 	if (mGoals)
-		Game::GetInstance().GetGameWindow()->draw(mGameText.at(GameState::GameText::Goal));
+		game.GetGameWindow()->draw(mGameText.at(GameState::GameText::Goal));
 
 }

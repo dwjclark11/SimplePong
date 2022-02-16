@@ -36,9 +36,9 @@ public:
 	sf::FloatRect GetBounds();
 	void Flash(bool change_color);
 	void PlayerUpgrades(unsigned upgradeVal);
-
+	const float& GetPlayerSpeed() const { return mPlayerSpeed; }
+	void IncreasePlayerSpeed(float speed) { mPlayerSpeed += speed; }
 	void UpdatePlayerMovement(const float& dt);
 	void Update(const float& dt);
 	void Render(sf::RenderTarget& target);
 };
-

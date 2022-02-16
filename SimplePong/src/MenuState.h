@@ -16,15 +16,12 @@ private:
 	};
 
 	std::map<MenuText, sf::Text> mMenuText;
-	FontHolder			mFontHolder;
-	TextureHolder		mTextureHolder;
 
-	SoundPlayer mSoundPlayer;
-	MusicPlayer mMusicPlayer;
 	sf::Sprite mBackgroundSprite;
 	
 	int mTextIndex;
 	bool mKeyUp;
+	class Game& game;
 
 public:
 	MenuState();
@@ -37,6 +34,4 @@ public:
 	virtual void Update(const float& dt) override;
 	virtual void Render(const float& dt) override;
 
-	virtual void Pause()  override {}
-	virtual void Resume() override {}
 };

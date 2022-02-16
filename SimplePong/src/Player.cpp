@@ -64,7 +64,9 @@ void Player::PlayerAIDrift(const float& dt)
 void Player::PlayerAIOn(bool AIOn)
 {
 	if (AIOn)
+	{
 		mPlayerAIOn = true;
+	}
 	else
 		mPlayerAIOn = false;
 }
@@ -115,8 +117,8 @@ void Player::PlayerUpgrades(unsigned upgradeVal)
 	switch (upgradeVal)
 	{
 	case 1:
-		if (mPlayerSpeed < 550.f)
-			mPlayerSpeed += 50.f;
+		/*if (mPlayerSpeed < 550.f)*/
+			mPlayerSpeed += 250.f;
 		break;
 	
 	case 3:

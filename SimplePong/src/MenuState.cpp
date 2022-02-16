@@ -1,62 +1,56 @@
 #include "stdafx.h"
 #include "MenuState.h"
 #include "GameState.h"
+#include "SettingsState.h"
 #include "Game.h"
 
 MenuState::MenuState()
 	: mTextIndex(0)
 	, mKeyUp(true)
+	, game(Game::GetInstance())
 {
 
 }
 
 void MenuState::Init()
 {
-	mFontHolder.load(Fonts::ID::Main, "Fonts/Main.ttf");
-	mFontHolder.load(Fonts::ID::MenuTitle, "Fonts/ASTONISHED.ttf");
-	mTextureHolder.load(Textures::ID::MenuBackground, "Textures/space.png");
-	
-	
 	sf::Text startText;
 	startText.setCharacterSize(30);
-	startText.setFont(mFontHolder.get(Fonts::ID::Main));
+	startText.setFont(Game::GetInstance().GetFonts().get(Fonts::ID::Main));
 	startText.setFillColor(sf::Color::White);
 	startText.setString("START");
 	startText.setPosition(Game::GetInstance().GetGameWindow()->getSize().x / 2.f, Game::GetInstance().GetGameWindow()->getSize().y / 2.f);
 	
 	sf::Text settingsText;
 	settingsText.setCharacterSize(30);
-	settingsText.setFont(mFontHolder.get(Fonts::ID::Main));
+	settingsText.setFont(Game::GetInstance().GetFonts().get(Fonts::ID::Main));
 	settingsText.setFillColor(sf::Color::White);
 	settingsText.setString("SETTINGS");
 	settingsText.setPosition(startText.getPosition().x, startText.getPosition().y + startText.getGlobalBounds().height * 2);
 
 	sf::Text quitText;
 	quitText.setCharacterSize(30);
-	quitText.setFont(mFontHolder.get(Fonts::ID::Main));
+	quitText.setFont(Game::GetInstance().GetFonts().get(Fonts::ID::Main));
 	quitText.setFillColor(sf::Color::White);
 	quitText.setString("QUIT");
 	quitText.setPosition(settingsText.getPosition().x, settingsText.getPosition().y + settingsText.getGlobalBounds().height * 2);
 
-
 	sf::Text menuTitle;
 	menuTitle.setCharacterSize(120);
-	menuTitle.setFont(mFontHolder.get(Fonts::ID::MenuTitle));
+	menuTitle.setFont(Game::GetInstance().GetFonts().get(Fonts::ID::MenuTitle));
 	menuTitle.setFillColor(sf::Color::White);
 	menuTitle.setString("SPACE PONG BATTLE");
 	menuTitle.setPosition(startText.getPosition().x, startText.getPosition().y - settingsText.getGlobalBounds().height * 8);
-
-
 
 	mMenuText.insert(std::make_pair(MenuState::MenuText::Start, std::move(startText)));
 	mMenuText.insert(std::make_pair(MenuState::MenuText::Settings, std::move(settingsText)));
 	mMenuText.insert(std::make_pair(MenuState::MenuText::Quit, std::move(quitText)));
 	mMenuText.insert(std::make_pair(MenuState::MenuText::MenuTitle, std::move(menuTitle)));
 	
-	mBackgroundSprite.setTexture(mTextureHolder.get(Textures::ID::MenuBackground));
+	mBackgroundSprite.setTexture(game.GetTextures().get(Textures::ID::MenuBackground));
 
-	mMusicPlayer.setVolume(30);
-	mMusicPlayer.play(Music::ID::MenuTheme);
+	game.GetMusicPlayer().setVolume(30);
+	game.GetMusicPlayer().play(Music::ID::MenuTheme);
 }
 
 void MenuState::HandleInput(sf::Event& event)
@@ -65,13 +59,20 @@ void MenuState::HandleInput(sf::Event& event)
 	{
 		if (mTextIndex == 0)
 		{
-			mSoundPlayer.play(SoundEffect::ButtonSelect);
+			game.GetSoundPlayer().play(SoundEffect::ButtonSelect);
+			game.GetMusicPlayer().stop();
 			Game::GetInstance().GetStateMachine()->AddState(std::make_unique<GameState>());
+			Game::GetInstance().GetStateMachine()->ChangeState();
+		}
+		else if (mTextIndex == 1)
+		{
+			game.GetSoundPlayer().play(SoundEffect::ButtonSelect);
+			Game::GetInstance().GetStateMachine()->AddState(std::make_unique<SettingsState>(), false);
 			Game::GetInstance().GetStateMachine()->ChangeState();
 		}
 		else if (mTextIndex == 2)
 		{
-			mSoundPlayer.play(SoundEffect::ButtonCancel);
+			game.GetSoundPlayer().play(SoundEffect::ButtonCancel);
 			Game::GetInstance().GetGameWindow()->close();
 		}
 		mKeyUp = false;
@@ -80,7 +81,7 @@ void MenuState::HandleInput(sf::Event& event)
 	if (sf::Keyboard::isKeyPressed(sf::Keyboard::Up) && mKeyUp)
 	{
 		mTextIndex--;
-		mSoundPlayer.play(SoundEffect::ButtonUp);
+		game.GetSoundPlayer().play(SoundEffect::ButtonUp);
 
 		if (mTextIndex < 0)
 			mTextIndex = 2;
@@ -91,7 +92,7 @@ void MenuState::HandleInput(sf::Event& event)
 	if (sf::Keyboard::isKeyPressed(sf::Keyboard::Down) && mKeyUp)
 	{
 		mTextIndex++;
-		mSoundPlayer.play(SoundEffect::ButtonUp);
+		game.GetSoundPlayer().play(SoundEffect::ButtonUp);
 		if (mTextIndex > 2)
 			mTextIndex = 0;
 		mKeyUp = false;
@@ -119,7 +120,7 @@ void MenuState::UpdateUIText()
 void MenuState::Update(const float& dt)
 {
 	UpdateUIText();
-	mSoundPlayer.removeStoppedSounds();
+	game.GetSoundPlayer().removeStoppedSounds();
 }
 
 void MenuState::Render(const float& dt)

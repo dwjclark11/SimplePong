@@ -23,14 +23,10 @@ SoundPlayer::SoundPlayer()
 	mSoundBuffers.load(SoundEffect::Goal, "Sounds/Goal.wav");
 	mSoundBuffers.load(SoundEffect::Start, "Sounds/Ball_Start.wav");
 	mSoundBuffers.load(SoundEffect::Upgrade, "Sounds/Upgrade.wav");
-	//mSoundBuffers.load(SoundEffect::ButtonDown, "Sounds/cursorDown.ogg");
 	mSoundBuffers.load(SoundEffect::ButtonUp, "Sounds/ButtonUp.wav");
 	mSoundBuffers.load(SoundEffect::ButtonSelect, "Sounds/ButtonSelect.wav");
 	mSoundBuffers.load(SoundEffect::ButtonCancel, "Sounds/ButtonCancel.wav");
-	//mSoundBuffers.load(SoundEffect::TitleStart, "Sounds/TitleStart.ogg");
-	//mSoundBuffers.load(SoundEffect::ButtonStart, "Sounds/Start.ogg");
-	//mSoundBuffers.load(SoundEffect::BackButton, "Sounds/BackButton.ogg");
-	
+
 	// Listener points towards the screen (default in SFML)
 	sf::Listener::setDirection(0.f, 0.f, -1.f);
 }

@@ -44,27 +44,16 @@ private:
 	std::map<GameText, sf::Text> mGameText;
 	std::map<BackgroundImages, sf::Sprite> mBackgroundSprites;
 
-	sf::Texture mRedPaddleTexture;
-	sf::Texture mBluePaddleTexture;
-
-	//sf::Clock mDtClock;
 	sf::Clock mInterClock;
 	sf::Clock mFlashClock;
 	
-	TextureHolder		mTextureHolder;
-	FontHolder			mFontHolder;
-
-	SoundPlayer			mSoundPlayer;
-	MusicPlayer		    mMusicPlayer;
 
 	sf::RectangleShape mTopGUIBlock;
-
 
 	float mInterTimer;
 	float mFlasher;
 
 	float mMovementSpeed;
-
 
 	bool mFlash;
 	bool mTurnOnAI;
@@ -94,6 +83,8 @@ private:
 	unsigned mPScore2;
 	bool mGoals;
 
+	class Game& game;
+	int mBallMultiplier;
 public:
 	GameState();
 	~GameState();
@@ -114,6 +105,7 @@ public:
 	void UpdatePlayerScores();
 	void UpdatePlayerUpgrades();
 	void UpdateBackground(const float& dt);
+	
 	// Ball Updates
 	void UpdateBallMovement(const float& dt);
 	void UpdateBallRotation(const float& dt);
@@ -123,7 +115,4 @@ public:
 	
 	virtual void Update(const float& dt) override;
 	virtual void Render(const float& dt) override;
-
-	virtual void Pause()  override {}
-	virtual void Resume() override {}
 };

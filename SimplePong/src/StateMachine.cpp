@@ -2,6 +2,9 @@
 #include "StateMachine.h"
 
 StateMachine::StateMachine()
+	: mIsAdding(false)
+	, mIsReplacing(false)
+	, mIsRemoving(false)
 {
 }
 

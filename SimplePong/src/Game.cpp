@@ -12,6 +12,28 @@ void Game::initWindow()
 	mWindow->setVerticalSyncEnabled(true);
 }
 
+void Game::InitFonts()
+{
+	// Init Fonts
+	mFontHolder.load(Fonts::ID::Main, "Fonts/Main.ttf");
+	mFontHolder.load(Fonts::ID::Goal, "Fonts/Goal1.ttf");
+	mFontHolder.load(Fonts::ID::MenuTitle, "Fonts/ASTONISHED.ttf");
+}
+
+void Game::InitTextures()
+{
+	mTextureHolder.load(Textures::ID::Player1Paddle, "Textures/red_paddle.png");
+	mTextureHolder.load(Textures::ID::Player2Paddle, "Textures/blue_paddle.png");
+	mTextureHolder.load(Textures::ID::Ball, "Textures/ball_images.png");
+	mTextureHolder.load(Textures::ID::Background_Layer_1, "Textures/parallax-space-backgound.png");
+	mTextureHolder.load(Textures::ID::Background_Layer_2, "Textures/parallax-space-stars.png");
+	mTextureHolder.load(Textures::ID::Background_Layer_3, "Textures/parallax-space-far-planets.png");
+	mTextureHolder.load(Textures::ID::Background_Layer_4, "Textures/parallax-space-ring-planet.png");
+	mTextureHolder.load(Textures::ID::Background_Layer_5, "Textures/parallax-space-big-planet.png");
+	mTextureHolder.load(Textures::ID::MenuBackground, "Textures/space.png");
+	mTextureHolder.get(Textures::ID::Background_Layer_1).setRepeated(true);
+}
+
 //void Game::initUI()
 //{
 //	mTopGUIBlock.setFillColor(sf::Color::Black);
@@ -76,7 +98,7 @@ void Game::initWindow()
 
 Game::Game()
 {
-	initWindow();
+	//initWindow();
 }
 
 Game::~Game()
@@ -134,6 +156,10 @@ void Game::render()
 
 void Game::run()
 {
+	initWindow();
+	InitFonts();
+	InitTextures();
+
 	mGameStateMachine = std::make_unique<StateMachine>();
 	mGameStateMachine->AddState(std::make_unique<MenuState>());
 	mGameStateMachine->ChangeState();

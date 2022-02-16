@@ -23,7 +23,6 @@ namespace Textures
 		Background_Layer_4,
 		Background_Layer_5,
 		MenuBackground,
-
 	};
 }
 
@@ -34,7 +33,6 @@ namespace Fonts
 		Main,
 		Goal,
 		MenuTitle,
-
 	};
 }
 
@@ -49,12 +47,8 @@ namespace SoundEffect
 		Upgrade,
 		UpgradeAvailable,
 		ButtonUp,
-		//ButtonDown,
 		ButtonSelect,
-		//TitleStart,
 		ButtonCancel ,
-		//Set_EditButton,
-
 	};
 }
 
@@ -62,13 +56,10 @@ namespace Music
 {
 	enum ID
 	{
-		//TitleTheme,
 		MenuTheme,
 		GamePlay,
-
 	};
 }
-
 
 template<typename Resource, typename Identifier>
 class ResourceHolder;
